@@ -1,14 +1,17 @@
 package com.example.lab1.service;
 
 import com.example.lab1.dto.*;
+import com.example.lab1.entity.ApprovedLoanEntity;
 import com.example.lab1.entity.LoanEntity;
 import com.example.lab1.entity.PassportDetailsEntity;
 import com.example.lab1.entity.UserDetailsEntity;
 import com.example.lab1.repository.LoanRepo;
 import com.example.lab1.retrofit.BankService;
 import com.example.lab1.retrofit.ServiceGenerator;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -36,6 +39,16 @@ public class CustomerService {
         return new LoanCalcResponse(sumToReturn, returnDate);
     }
 
+    private void processLoan(LoanEntity loan){
+        var loanCalcResponse = calcLoanRequest(new LoanDTO(loan.getSum(), loan.getTerm()));
+        var approvedLoan = new ApprovedLoanEntity();
+        approvedLoan.setLoanEntity(loan);
+        approvedLoan.setSumToReturn(loanCalcResponse.getSumToReturn());
+        approvedLoan.setReturnDate(loanCalcResponse.getReturnDate());
+        loan.setApprovedLoan(approvedLoan);
+        loanRepo.save(loan);
+    }
+
     public void postUserDetails(Integer userId, UserDetailsDTO userDetails) throws IllegalAccessException {
         var loan = loanRepo.findByCustomerId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный идентификатор пользователя"));
@@ -59,19 +72,8 @@ public class CustomerService {
         loanRepo.save(loan);
     }
 
-    public Integer checkBalance(String cardNumber){
-        Call<Integer> call = bankService.getBalance(cardNumber);
-        try {
-            Response<Integer> response = call.execute();
-            Integer balance = response.body();
-            return balance;
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return -1;
-    }
-
-    public TransferResponse makeTransfer(Integer userId, CardDetails cardDetails) throws IllegalAccessException {
+    @Transactional
+    public TransferResponse makeTransfer(Integer userId, CardCredentials cardCredentials) throws IllegalAccessException {
         var loan = loanRepo.findByCustomerId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный идентификатор пользователя"));
         if(loan.getUserDetails() == null){
@@ -81,17 +83,20 @@ public class CustomerService {
             throw new IllegalAccessException("Данные с предыдущего этапа отсутствуют");
         }
         var transferRequest = new TransferRequest();
-        transferRequest.setRecipientCardNumber(cardDetails.getCardNumber());
+        transferRequest.setRecipientCardNumber(cardCredentials.getCardNumber());
         transferRequest.setSum(loan.getSum());
         transferRequest.setSenderCardNumber(CARD_NUMBER);
         transferRequest.setSenderCardPassword(PASSWORD);
         Call<TransferResponse> call = bankService.makeTransfer(transferRequest);
         try {
             Response<TransferResponse> response = call.execute();
-            if(response.body() != null) {
+            if(response.isSuccessful()) {
+                processLoan(loan);
                 return response.body();
             }
-        } finally {
+            return new Gson().fromJson(response.errorBody().string(),TransferResponse.class);
+        }
+        catch (Exception ex) {
             return new TransferResponse(false, "Банковский сервис недоступен");
         }
     }

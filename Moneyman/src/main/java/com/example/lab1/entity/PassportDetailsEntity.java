@@ -24,9 +24,7 @@ public class PassportDetailsEntity {
     private LoanEntity loanEntity;
 
     private String address;
-
     private String series;
-
     private String number;
 
     public PassportDetailsEntity(PassportDetailsDTO passportDetailsDTO) {

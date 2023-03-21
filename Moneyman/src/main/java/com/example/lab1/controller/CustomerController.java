@@ -42,8 +42,8 @@ public class CustomerController {
 
     @PostMapping(path = "/user/{id}/makeTransfer")
     public TransferResponse makeTransfer(@PathVariable("id") Integer userId,
-                                         @Valid @RequestBody CardDetails cardDetails) throws IllegalAccessException {
-        return customerService.makeTransfer(userId, cardDetails);
+                                         @Valid @RequestBody CardCredentials cardCredentials) throws IllegalAccessException {
+        return customerService.makeTransfer(userId, cardCredentials);
     }
 
 

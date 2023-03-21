@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CardDetails {
+public class CardCredentials {
     @Pattern(regexp = "\\d{4}-\\d{4}-\\d{4}-\\d{4}")
     private String cardNumber;
     @Pattern(regexp = "\\d{3}")

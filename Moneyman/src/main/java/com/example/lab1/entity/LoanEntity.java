@@ -48,4 +48,12 @@ public class LoanEntity {
         this.passportDetails = passportDetails;
         passportDetails.setLoanEntity(this);
     }
+
+    @OneToOne(mappedBy = "loanEntity", cascade = CascadeType.ALL)
+    private ApprovedLoanEntity approvedLoan;
+
+    public void setApprovedLoan(ApprovedLoanEntity approvedLoan) {
+        this.approvedLoan = approvedLoan;
+        approvedLoan.setLoanEntity(this);
+    }
 }
