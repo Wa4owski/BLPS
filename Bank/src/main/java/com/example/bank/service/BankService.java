@@ -2,6 +2,7 @@ package com.example.bank.service;
 
 import com.example.bank.exeption.IllegalCardNumberException;
 import com.example.bank.exeption.WrongPasswordException;
+import com.example.bank.model.CardCreds;
 import com.example.bank.model.TransferRequest;
 import com.example.bank.model.TransferResponse;
 import com.example.bank.repository.AccountRepo;
@@ -36,5 +37,14 @@ public class BankService {
             return new TransferResponse(true, "Транзакция успешно завершена");
         }
         return new TransferResponse(false, "На счете отправителя недостаточно средств");
+    }
+
+    public Integer checkBalance(CardCreds cardCreds) {
+        var account = accountRepo.findByCardNumber(cardCreds.getNumber())
+                .orElseThrow(() -> new IllegalCardNumberException("Неверный идентификатор счета"));
+        if(!account.getPassword().equals(cardCreds.getPassword())){
+            throw new WrongPasswordException("Предоставелнный пароль не соответсует паролю счета");
+        }
+        return account.getBalance();
     }
 }

@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/user/{id}/passportData")
-    public void postBasicUserData(@PathVariable(name = "id") Integer userId,
+    public void postPassportUserData(@PathVariable(name = "id") Integer userId,
                                   @Valid @RequestBody PassportDetailsDTO passportDetails) throws IllegalAccessException {
         customerService.postPassportDetails(userId, passportDetails);
     }

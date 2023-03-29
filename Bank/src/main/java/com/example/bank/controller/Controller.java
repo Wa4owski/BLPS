@@ -1,5 +1,6 @@
 package com.example.bank.controller;
 
+import com.example.bank.model.CardCreds;
 import com.example.bank.model.TransferRequest;
 import com.example.bank.model.TransferResponse;
 import com.example.bank.service.BankService;
@@ -19,9 +20,9 @@ public class Controller {
     @Autowired
     BankService bankService;
 
-    @GetMapping("/checkBalance")
-    public Integer checkBalance(@RequestParam(name = "cardNumber") String cardNumber ){
-        return 228;
+    @PostMapping("/checkBalance")
+    public Integer checkBalance(@Valid @RequestBody CardCreds cardCreds){
+        return bankService.checkBalance(cardCreds);
     }
 
     @PostMapping("/makeTransfer")

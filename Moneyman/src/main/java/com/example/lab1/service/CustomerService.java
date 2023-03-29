@@ -5,13 +5,12 @@ import com.example.lab1.entity.ApprovedLoanEntity;
 import com.example.lab1.entity.LoanEntity;
 import com.example.lab1.entity.PassportDetailsEntity;
 import com.example.lab1.entity.UserDetailsEntity;
-import com.example.lab1.repository.LoanRepo;
 import com.example.lab1.retrofit.BankService;
 import com.example.lab1.retrofit.ServiceGenerator;
+import com.example.lab1.repository.LoanRepo;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -72,15 +71,14 @@ public class CustomerService {
         loanRepo.save(loan);
     }
 
-    @Transactional
     public TransferResponse makeTransfer(Integer userId, CardCredentials cardCredentials) throws IllegalAccessException {
         var loan = loanRepo.findByCustomerId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный идентификатор пользователя"));
-        if(loan.getUserDetails() == null){
+        if(loan.getUserDetails() == null || loan.getPassportDetails() == null){
             throw new IllegalAccessException("Данные с предыдущего этапа отсутствуют");
         }
-        if(loan.getPassportDetails() == null){
-            throw new IllegalAccessException("Данные с предыдущего этапа отсутствуют");
+        if(loan.getApprovedLoan() != null){
+            throw new IllegalAccessException("Решение по данному займу уже было принято");
         }
         var transferRequest = new TransferRequest();
         transferRequest.setRecipientCardNumber(cardCredentials.getCardNumber());
