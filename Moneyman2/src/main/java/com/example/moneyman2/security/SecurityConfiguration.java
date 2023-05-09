@@ -27,7 +27,8 @@ public class SecurityConfiguration {
 
     http.httpBasic().and().csrf().disable()
             .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "customer/register",  "/signin").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/customer/register",  "/signin").permitAll()
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/moderator/**").hasRole("MODERATOR")
                         .anyRequest().authenticated()
