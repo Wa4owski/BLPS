@@ -38,6 +38,4 @@ public class ModeratorEntity {
         rejectedLoan.setModerator(this);
     }
 
-
-
 }

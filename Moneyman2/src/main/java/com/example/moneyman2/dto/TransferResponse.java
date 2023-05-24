@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 public class TransferResponse implements Serializable {
-    private Boolean result;
+    private Integer approvedAppId;
+    private Integer code;
     private String comment;
 }

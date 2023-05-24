@@ -1,9 +1,6 @@
 package com.example.bank.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,7 +8,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class TransferResponse implements Serializable {
-    private Boolean result;
+    private Integer approvedAppId;
+    private Integer code;
     private String comment;
 }

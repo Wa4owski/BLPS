@@ -3,13 +3,14 @@ package com.example.moneyman2.dto;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class CardCredentials {
+public class CardCredentials implements Serializable {
     @Pattern(regexp = "\\d{4}-\\d{4}-\\d{4}-\\d{4}")
     private String cardNumber;
     @Pattern(regexp = "\\d{3}")

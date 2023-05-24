@@ -1,8 +1,11 @@
 package com.example.moneyman2.entity;
 
+import com.example.moneyman2.model.ApprovedLoanStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -20,7 +23,8 @@ public class ApprovedLoanEntity {
     private Integer loanApplicationId;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "loan_application_id")
     private LoanApplicationEntity loanApplication;
 
@@ -31,6 +35,9 @@ public class ApprovedLoanEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "moderator_id")
     private ModeratorEntity moderator;
+
+    @Enumerated(EnumType.STRING)
+    private ApprovedLoanStatus status;
 
     @CreationTimestamp
     private Timestamp createdAt;

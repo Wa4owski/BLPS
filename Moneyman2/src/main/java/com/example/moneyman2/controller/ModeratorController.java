@@ -1,18 +1,13 @@
 package com.example.moneyman2.controller;
 
 import com.example.moneyman2.dto.LoanApplicationDTO;
-import com.example.moneyman2.dto.TransferResponse;
 import com.example.moneyman2.security.UserPrincipal;
 import com.example.moneyman2.service.ModeratorService;
-import org.springframework.http.HttpStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/moderator")
@@ -33,11 +28,11 @@ public class ModeratorController {
     }
 
     @PostMapping(path = "/application/{id}/approve")
-    public TransferResponse approveLoan(@PathVariable("id") Integer applicationId,
-                                         Authentication auth) throws IllegalAccessException {
+    public void approveLoan(@PathVariable("id") Integer applicationId,
+                                         Authentication auth) throws IllegalAccessException, JsonProcessingException {
         var userPrincipal = (UserPrincipal) auth.getPrincipal();
         Integer moderatorId = userPrincipal.getUserId();
-        return moderatorService.approveLoanRequest(moderatorId, applicationId);
+        moderatorService.approveLoanRequest(moderatorId, applicationId);
     }
 
     @PostMapping(path = "/application/{id}/reject")

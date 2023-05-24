@@ -1,8 +1,10 @@
 package com.example.bank.controller;
 
+import com.example.bank.exeption.CardCredsException;
 import com.example.bank.model.CardCreds;
 import com.example.bank.model.TransferRequest;
 import com.example.bank.model.TransferResponse;
+import com.example.bank.model.TransferStatus;
 import com.example.bank.service.BankService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +45,5 @@ public class Controller {
         return errors;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public TransferResponse handleIllegalArgument(
-            IllegalArgumentException ex) {
-        return new TransferResponse(false, ex.getMessage());
-    }
 
 }
