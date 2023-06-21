@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_08gzx1l" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.11.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="Process_0xou5e1" name="Пересылка трансферов по расписанию" isExecutable="true" camunda:historyTimeToLive="3000">
+    <bpmn:startEvent id="Event_1pc2nf9">
+      <bpmn:outgoing>Flow_1qk50yn</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1sf5by8">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/PT60S</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1qk50yn" sourceRef="Event_1pc2nf9" targetRef="Event_1pve8zq" />
+    <bpmn:endEvent id="Event_1pve8zq" name="Запрос банку отправлен">
+      <bpmn:incoming>Flow_1qk50yn</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_14ptnqf" messageRef="Message_09rjr39" camunda:class="itmo.blps.delegate.TransferRequestSendToBankDelegate" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_09rjr39" name="message-to-bank" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0xou5e1">
+      <bpmndi:BPMNShape id="Event_1pc2nf9_di" bpmnElement="Event_1pc2nf9">
+        <dc:Bounds x="182" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1y0fvs5_di" bpmnElement="Event_1pve8zq">
+        <dc:Bounds x="352" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="336" y="125" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1qk50yn_di" bpmnElement="Flow_1qk50yn">
+        <di:waypoint x="218" y="100" />
+        <di:waypoint x="352" y="100" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
